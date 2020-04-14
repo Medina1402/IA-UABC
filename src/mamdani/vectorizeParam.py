@@ -1,5 +1,7 @@
 from numpy import ndarray, array
-from src.mamdani import DesignParams, vectorizeMatrixTocolVec
+
+from src.mamdani.typedata import DesignParams
+from src.matrix import vectorizeMatrixTocolVec
 
 
 def vectorizeParam(designParam: DesignParams) -> ndarray:

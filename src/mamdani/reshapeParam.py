@@ -1,5 +1,6 @@
 from numpy import ndarray
-from src.mamdani import DesignParams
+
+from src.mamdani.typedata import DesignParams
 from src.matrix import reshapeVecToMatrix
 
 
@@ -7,19 +8,23 @@ def reshapeParam(designParam: DesignParams, V: ndarray) -> DesignParams:
     """
     :param designParam:
     :param V: array (2rn+rm)x1
-    :return:
+    :return: designParam
     """
 
-    r, n = designParam.sigma
-    _, m = designParam.theta
+    r, n = designParam.sigma.shape # reglas, entradas
+    _, m = designParam.theta.shape # salidas
 
-    VS = V[:r * n]
-    VM = V[r * n: r * n * 2]
-    VC = V[r * n * 2:]
+    np1 = 2 * r * n # antecedentes
+    np2 = m * r # consecuentes
+    np3 = np1 + np2 # total de parametros
+
+    V1 = V[:np1]
+    VT = V[np1: np3]
+    VS = V1[:int(np1/2)]
+    VC = V1[int(np1/2):np1]
 
     SIGMA = reshapeVecToMatrix(VS, r, n)
-    CENTER = reshapeVecToMatrix(VM, r, n)
-    THETA = reshapeVecToMatrix(VC, r, m)
+    CENTER = reshapeVecToMatrix(VC, r, n)
+    THETA = reshapeVecToMatrix(VT, r, m)
 
-    designParam2 = DesignParams(SIGMA, CENTER, THETA)
-    return designParam2
+    return DesignParams(SIGMA, CENTER, THETA)

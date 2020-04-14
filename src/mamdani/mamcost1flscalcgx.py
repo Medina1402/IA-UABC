@@ -1,5 +1,6 @@
 from numpy import ndarray, zeros, multiply, transpose
-from src.mamdani import DesignParams
+
+from src.mamdani.typedata import DesignParams
 from src.matrix import colMatrixAugment, vectorizeMatrixTocolVec, normalize
 
 

@@ -1,5 +1,5 @@
 from numpy import ndarray, zeros, math
-from src.mamdani import DesignParams
+from src.mamdani.typedata import DesignParams
 
 
 def mamcost1flscalcperf(designParam: DesignParams, X: ndarray, T: ndarray) -> (float, ndarray, ndarray, float, ndarray):
@@ -28,8 +28,9 @@ def mamcost1flscalcperf(designParam: DesignParams, X: ndarray, T: ndarray) -> (f
             suma = 0
             for i in range(n):
                 suma += ((X[p][i] - CENTER[k][i]) / SIGMA[k][i]) ** 2
+
             ALPHA[p][k] = math.e ** (suma * -0.5)
-            sum_alpha += sum_alpha + ALPHA[p][k]
+            sum_alpha += ALPHA[p][k]
 
         for k in range(r):
             PHI[p][k] = ALPHA[p][k] / sum_alpha

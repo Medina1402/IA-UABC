@@ -24,7 +24,7 @@ def mamcost1flscalcgrad(designParam: DesignParams, X: ndarray, T: ndarray, Y: nd
 
     dE_dS = zeros([r, n])
     dE_dM = zeros([r, n])
-    dE_dC = zeros([r, n])
+    dE_dC = zeros([r, m])
 
     for p in range(q):
         dEp_ds = zeros([r, n])
@@ -37,7 +37,7 @@ def mamcost1flscalcgrad(designParam: DesignParams, X: ndarray, T: ndarray, Y: nd
                 B = A * (X[p][i] - CENTER[k][i]) / SIGMA[k][i]
                 S = 0
                 for j in range(m):
-                    S = S - 2 * E[p][j] * (THETA[k][j] - Y[p])[j]
+                    S += -2 * E[p][j] * (THETA[k][j] - Y[p])[j]
                 dEp_dm[k][i] = A * S
                 dEp_ds[k][i] = B * S
 
@@ -49,6 +49,6 @@ def mamcost1flscalcgrad(designParam: DesignParams, X: ndarray, T: ndarray, Y: nd
         dE_dM += dEp_dm
         dE_dC += dEp_dc
 
-    gX: ndarray = array([dE_dS[:], dE_dM[:], dE_dC[:]])
+    gX: ndarray = array([dE_dS[:], dE_dM[:], dE_dC[:]]).ravel()
     normgX: float = normalize(gX)
     return gX, normgX
