@@ -15,11 +15,4 @@ def colMatrixAugment(A: ndarray, B: ndarray) -> ndarray:
     """
 
     M = column_stack([A, B])
-    # n, m = A.shape
-    # n2, L = B.shape
-    # for j in range(L):
-    #     col = m + j
-    #     for i in range(n):
-    #         A[i][col] = B[i][j]
-    # return A
     return M
