@@ -1,4 +1,5 @@
 from numpy import ndarray, zeros, math
+
 from src.mamdani.typedata import DesignParams
 
 

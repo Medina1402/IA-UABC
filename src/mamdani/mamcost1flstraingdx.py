@@ -1,11 +1,10 @@
-from numpy import transpose, append, remainder, isfinite, add
+from numpy import transpose, append, remainder, isfinite
+
 from src.mamdani.mamcost1flscalcgrad import mamcost1flscalcgrad
 from src.mamdani.mamcost1flscalcperf import mamcost1flscalcperf
 from src.mamdani.reshapeParam import reshapeParam
 from src.mamdani.typedata import Tuple, TrainParams, TR, VV, DesignParams
 from src.mamdani.vectorizeParam import vectorizeParam
-from src.matrix import vectorizeMatrixTocolVec
-from src.other.plotperf import plotperf
 
 
 def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = False, testV: Tuple = False,
@@ -84,7 +83,9 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
                 print(" -> %s:  %f / %f" % (performFcn.upper(), perf, tol))
             if isfinite(minGrad):
                 print(" -> Gradient:  %f / %f" % (normgX, minGrad))
-            plotperf(tr, tol, this, epoch)
+            # =============================
+            # plotperf(tr, tol, this, epoch)
+            # =============================
             print("\n")
             if len(stop):
                 print(" >>>> %s, %s" % (this, stop))
