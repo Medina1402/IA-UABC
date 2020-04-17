@@ -76,19 +76,19 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
 
         # Progreso
         if not remainder(epochs, show) or len(stop):
-            print("*** ", this, " ***")
+            strTemp = this + " >>"
             if isfinite(epochs):
-                print(" -> Epoch:  %d / %d" % (epoch, epochs))
+                strTemp = strTemp + " Epoch: " + str(epoch) + "/" + str(epochs)
             if isfinite(tol):
-                print(" -> %s:  %f / %f" % (performFcn.upper(), perf, tol))
+                strTemp = strTemp + ", " + performFcn.upper() + ": " + str(perf) + "/" + str(tol)
             if isfinite(minGrad):
-                print(" -> Gradient:  %f / %f" % (normgX, minGrad))
+                strTemp = strTemp + ", Gradient: " + str(normgX) + "/" + str(minGrad)
             # =============================
             # plotperf(tr, tol, this, epoch)
             # =============================
-            print("\n")
+            print(strTemp)
             if len(stop):
-                print(" >>>> %s, %s" % (this, stop))
+                print(" >>>> %s, %s\n" % (this, stop))
 
         dX = mc * dX - (1 - mc) * lr * gX
         X2 = X + dX

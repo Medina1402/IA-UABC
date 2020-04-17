@@ -4,7 +4,8 @@ from src.mamdani.typedata import DesignParams
 from src.matrix import colMatrixAugment, vectorizeMatrixTocolVec, normalize
 
 
-def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndarray, E: ndarray, PHI: ndarray) -> (ndarray, float, ndarray):
+def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndarray, E: ndarray, PHI: ndarray) \
+        -> (ndarray, float, ndarray):
     """
     :param designParam:
     :param X: array qxn
@@ -16,7 +17,7 @@ def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndar
     """
     q, n = X.shape
     _, m = T.shape
-    _, r = PHI.shape
+    r, _ = designParam.sigma.shape
 
     SIGMA = designParam.sigma
     CENTER = designParam.center
@@ -28,19 +29,19 @@ def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndar
 
     for j in range(m):
         for p in range(q):
-            row = j * q + p
+            row = (j-1) * q + p
             for i in range(n):
                 for k in range(r):
-                    col = i * r + k
+                    col = (i-1) * r + k
                     temp1 = (THETA[k][j] - Y[p][j]) * PHI[p][k]
                     temps = (X[p][i] - CENTER[k][i]) ** 2 / SIGMA[k][i] ** 3
-                    de_ds[row][col] = temp1 * temps * -1
+                    de_ds[row][col] = -temp1 * temps
                     tmpm = (X[p][i] - CENTER[k][i]) / SIGMA[k][i] ** 2
-                    de_dm[row][col] = temp1 * tmpm * -1
+                    de_dm[row][col] = -temp1 * tmpm
 
             for k in range(r):
-                col = j * r + k
-                de_dc[row][col] = PHI[p][k] * -1
+                col = (j-1) * r + k
+                de_dc[row][col] = -PHI[p][k] * -1
     Jew = colMatrixAugment(de_ds, de_dm)
     Jew = colMatrixAugment(Jew, de_dc)
     ew = vectorizeMatrixTocolVec(E)
