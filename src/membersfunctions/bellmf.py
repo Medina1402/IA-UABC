@@ -1,4 +1,4 @@
-from numpy import ndarray
+from numpy import ndarray, array
 
 
 # ==========================================================
@@ -11,7 +11,7 @@ class BellMF:
         self.slope = slope
 
 
-def bellmf(x: ndarray, points: BellMF):
+def bellmf(x: ndarray, points: BellMF) -> ndarray:
     """
     :param x: 1d array or iterable values, independent variable
     :param points: [a, b, c] points of value for bell generalized
@@ -28,4 +28,4 @@ def bellmf(x: ndarray, points: BellMF):
             values.append(x1 ** -1)
         except ZeroDivisionError:
             values.append(0)
-    return values
+    return array(values)
