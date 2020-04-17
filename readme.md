@@ -17,7 +17,7 @@ Logica difuza utilizando numpy:
 * mamdani
     + [typedata](src/mamdani/typedata.py)
     + [mamcost1flscalcgrad](src/mamdani/mamcost1flscalcgrad.py)
-    + [mamcost1flscalcgx](src/mamdani/mamcost1flscalcgx.py.py)
+    + [mamcost1flscalcgx](src/mamdani/mamcost1flscalcgx.py)
     + [mamcost1flscalcperf](src/mamdani/mamcost1flscalcperf.py)
     + [mamcost1flstraingdx](src/mamdani/mamcost1flstraingdx.py)
     + [reshapeParam](src/mamdani/reshapeParam.py)
