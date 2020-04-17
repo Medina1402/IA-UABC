@@ -1,4 +1,4 @@
-from numpy import column_stack, ndarray
+from numpy import ndarray, column_stack
 
 
 def colMatrixAugment(A: ndarray, B: ndarray) -> ndarray:
@@ -13,6 +13,4 @@ def colMatrixAugment(A: ndarray, B: ndarray) -> ndarray:
     :param B: array nxL
     :return: array nx(m+L)
     """
-
-    M = column_stack([A, B])
-    return M
+    return column_stack((A, B))

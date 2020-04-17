@@ -49,6 +49,6 @@ def mamcost1flscalcgrad(designParam: DesignParams, X: ndarray, T: ndarray, Y: nd
         dE_dM += dEp_dm
         dE_dC += dEp_dc
 
-    gX: ndarray = array([dE_dS[:], dE_dM[:], dE_dC[:]]).ravel()
+    gX: ndarray = array([dE_dS, dE_dM, dE_dC]).ravel()
     normgX: float = normalize(gX)
     return gX, normgX

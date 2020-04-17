@@ -1,9 +1,11 @@
+import numpy
+
 from .colMatrixAugment import *
 from .reshapeVecToMatrix import *
 from .vectorizeMatrixTocolVec import *
 
 
-def normalize(A: ndarray):
+def normalize(A: ndarray) -> float:
     """
     Normalizacion Euclidanea
     *************************
@@ -18,7 +20,7 @@ def normalize(A: ndarray):
     :return:
     """
     value = 0
-    V = ravel(A)
-    for k in range(len(A)):
-        value += V[k]**2
-    return value ** .5
+    V = ravel(A)**2
+    for k in range(len(V)):
+        value += V[k]
+    return value**0.5

@@ -1,6 +1,6 @@
-from numpy import array, transpose, sqrt
+from numpy import array, transpose
 from src.mamdani import *
-from src.mamdani.typedata import DesignParams, Tuple, TrainParams
+from src.mamdani.typedata import DesignParams, Tuple
 from src.other import loadMatlabFile
 
 if __name__ == '__main__':
@@ -20,12 +20,11 @@ if __name__ == '__main__':
     MSE = SSE / Y.size
     print("MSE: ", MSE)
 
-    RMSE = sqrt(MSE)
+    RMSE = MSE ** .5
     print("RMSE: ", RMSE)
 
-    # CORREGUIR mamcost1flscalcgx
-    gX, normgX, Jew = mamcost1flscalcgx(dsp, transpose(trainV.X), transpose(trainV.T), Y, E, PHI)
-    print("normgX: ", normgX, " ")
+    gX, normgX, Jew, ew = mamcost1flscalcgx(dsp, transpose(trainV.X), transpose(trainV.T), Y, E, PHI)
+    print("normgX", normgX)
 
     gX, normgradX = mamcost1flscalcgrad(dsp, transpose(trainV.X), transpose(trainV.T), Y, E, PHI)
     print("normgradX: ", normgradX)

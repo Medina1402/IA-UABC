@@ -1,7 +1,7 @@
-from numpy import ndarray, zeros, multiply, transpose
+from numpy import ndarray, zeros, matmul, dot
 
 from src.mamdani.typedata import DesignParams
-from src.matrix import colMatrixAugment, vectorizeMatrixTocolVec, normalize
+from src.matrix import colMatrixAugment, normalize
 
 
 def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndarray, E: ndarray, PHI: ndarray) \
@@ -17,7 +17,7 @@ def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndar
     """
     q, n = X.shape
     _, m = T.shape
-    r, _ = designParam.sigma.shape
+    _, r = PHI.shape
 
     SIGMA = designParam.sigma
     CENTER = designParam.center
@@ -29,23 +29,24 @@ def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndar
 
     for j in range(m):
         for p in range(q):
-            row = (j-1) * q + p
+            row = j * q + p
             for i in range(n):
                 for k in range(r):
-                    col = (i-1) * r + k
+                    col = i * r + k
                     temp1 = (THETA[k][j] - Y[p][j]) * PHI[p][k]
-                    temps = (X[p][i] - CENTER[k][i]) ** 2 / SIGMA[k][i] ** 3
+                    temps = (X[p][i] - CENTER[k][i])**2 / SIGMA[k][i]**3
                     de_ds[row][col] = -temp1 * temps
-                    tmpm = (X[p][i] - CENTER[k][i]) / SIGMA[k][i] ** 2
+                    tmpm = (X[p][i] - CENTER[k][i]) / SIGMA[k][i]**2
                     de_dm[row][col] = -temp1 * tmpm
 
             for k in range(r):
-                col = (j-1) * r + k
-                de_dc[row][col] = -PHI[p][k] * -1
+                col = j * r + k
+                de_dc[row][col] = -PHI[p][k]
+
     Jew = colMatrixAugment(de_ds, de_dm)
     Jew = colMatrixAugment(Jew, de_dc)
-    ew = vectorizeMatrixTocolVec(E)
-    gX = 2 * multiply(ew, transpose(Jew))
-    normgX: float = normalize(gX)
+    ew: ndarray = E.ravel(order="F")  # vectorizeMatrix
+    gX: ndarray = 2 * dot(Jew.transpose(), ew)
+    normgX = normalize(gX)
 
-    return gX, normgX, Jew
+    return gX, normgX, Jew, ew
