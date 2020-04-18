@@ -9,7 +9,7 @@ class DesignParams:
 
 
 class Tuple:
-    def __init__(self, X: ndarray, T: ndarray, Q: int):
+    def __init__(self, X: ndarray, T: ndarray, Q: ndarray):
         self.X = X
         self.T = T
         self.Q = Q
@@ -33,7 +33,7 @@ class TR:
 
 class TrainParams:
     def __init__(self, epochs=25, goal=0, lr=0.01, lr_inc=1.05, lr_dec=0.7, max_fail=5, max_perf_inc=1.04, mc=0.9,
-                 min_grad=1e-6, show=25):
+                 min_grad=1e-6, show=1):
         self.epochs = epochs
         self.goal = goal
         self.lr = lr

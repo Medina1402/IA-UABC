@@ -64,6 +64,7 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             temp, _Y, _E, _PHI, _ALPHA = mamcost1flscalcperf(desingParam, transpose(testV.X), transpose(testV.T))
             tr.tperf = append(tr.tperf, temp)
 
+        stop = ""
         if perf <= tol:
             stop = "Performance goal met."
         elif epoch == epochs:
@@ -87,7 +88,7 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             # plotperf(tr, tol, this, epoch)
             # =============================
             print(strTemp)
-            if len(stop):
+            if len(stop)>1:
                 print(" >>>> %s, %s\n" % (this, stop))
 
         dX = mc * dX - (1 - mc) * lr * gX
