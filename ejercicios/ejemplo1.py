@@ -7,21 +7,22 @@ from src.other import loadMatlabFile
 def ejemplo1():
     engineInputs, engineTargets, testV, trainV, valV = loadMatlabFile("assets/engine_data.mat", "engineInputs",
                                                                       "engineTargets", "testV", "trainV", "valV")
-    trainV = Tuple(array(trainV[0][0][2]), array(trainV[0][0][3]), trainV[0][0][4][0])
-
+    trainV = Tuple(array(trainV[0][0][2]), array(trainV[0][0][3]), array(trainV[0][0][4]))
     CENTER, THETA, SIGMA = loadMatlabFile("assets/initdesignparam.mat", "CENTER", "CENTROID", "SIGMA")
     dsp = DesignParams(array(SIGMA), array(CENTER), array(THETA))
+    # ===============================================
+    # ===============================================
     SSE, Y, E, PHI, ALPHA = mamcost1flscalcperf(dsp, trainV.X.transpose(), trainV.T.transpose())
-    print("SSE: ", SSE)
-
+    print("SSE: ", SSE)  # SSE:  13030413.000173496
+    # ===============================================
     MSE = SSE / Y.size
-    print("MSE: ", MSE)
-
+    print("MSE: ", MSE)  # MSE:  9061.483310273641
+    # ===============================================
     RMSE = MSE ** .5
-    print("RMSE: ", RMSE)
-
+    print("RMSE: ", RMSE)  # RMSE:  95.19182375747216
+    # ===============================================
     gX, normgX, Jew, ew = mamcost1flscalcgx(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
-    print("normgX", normgX)
-
+    print("normgX", normgX)  # normgX 72953.08320644706
+    # ===============================================
     gX, normgradX = mamcost1flscalcgrad(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
-    print("normgradX: ", normgradX)
+    print("normgradX: ", normgradX)  # normgradX:  72953.08320644703

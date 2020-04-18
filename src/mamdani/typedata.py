@@ -22,7 +22,8 @@ class VV:
 
 
 class TR:
-    def __init__(self, epoch: ndarray = array([]), perf: ndarray = array([]), lr:ndarray = array([]), vperf:ndarray = array([]), tperf:ndarray = array([]), mu: ndarray = array([])):
+    def __init__(self, epoch: ndarray = array([]), perf: ndarray = array([]), lr: ndarray = array([]),
+                 vperf: ndarray = array([]), tperf: ndarray = array([]), mu: ndarray = array([])):
         self.epoch = epoch
         self.perf = perf
         self.vperf = vperf

@@ -1,4 +1,4 @@
-from numpy import transpose, append, remainder, isfinite
+from numpy import transpose, append, remainder, isfinite, ndarray
 
 from src.mamdani.mamcost1flscalcgrad import mamcost1flscalcgrad
 from src.mamdani.mamcost1flscalcperf import mamcost1flscalcperf
@@ -20,7 +20,6 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
 
     this = "MAMCOST1FLSTRAINGDX"
     performFcn = "SSE"
-    stop = ""
 
     epochs = trainsParam.epochs
     tol = trainsParam.goal  # GOAL
@@ -40,15 +39,15 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
     if doTest is not False:
         doTest = True
 
-    X = vectorizeParam(desingParam)
-    perf, Y, E, PHI, ALPHA = mamcost1flscalcperf(desingParam, transpose(train.X), transpose(train.T))
-    gX, normgX = mamcost1flscalcgrad(desingParam, transpose(train.X), transpose(train.T), Y=Y, E=E, PHI=PHI)
-    dX = -1 * lr * gX
+    X: ndarray = vectorizeParam(desingParam)
+    perf, Y, E, PHI, ALPHA = mamcost1flscalcperf(desingParam, train.X.transpose(), train.T.transpose())
+    gX, normgX = mamcost1flscalcgrad(desingParam, train.X.transpose(), train.T.transpose(), Y, E, PHI)
+    dX: ndarray = -1 * lr * gX
 
     vv = VV()
     if doVal:
         vv.designParam = desingParam
-        vperfX, __a, __b, __c, __d = mamcost1flscalcperf(desingParam, transpose(valV.X), transpose(valV.T))
+        vperfX, __a, __b, __c, __d = mamcost1flscalcperf(desingParam, valV.X.transpose(), valV.T.transpose())
         vv.perf = vperfX
         vv.numfail = 0
 
@@ -58,10 +57,10 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
         tr.perf = append(tr.perf, perf)
         tr.lr = append(tr.lr, lr)
 
-        if doVal:
+        if doVal is True:
             tr.vperf = append(tr.vperf, vv.perf)
-        if doTest:
-            temp, _Y, _E, _PHI, _ALPHA = mamcost1flscalcperf(desingParam, transpose(testV.X), transpose(testV.T))
+        if doTest is True:
+            temp, _Y, _E, _PHI, _ALPHA = mamcost1flscalcperf(desingParam, testV.X.transpose(), testV.T.transpose())
             tr.tperf = append(tr.tperf, temp)
 
         stop = ""
@@ -76,10 +75,10 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             desingParam = vv.designParam
 
         # Progreso
-        if not remainder(epochs, show) or len(stop):
+        if not remainder(epochs, show) or len(stop) > 0:
             strTemp = this + " >>"
             if isfinite(epochs):
-                strTemp = strTemp + " Epoch: " + str(epoch) + "/" + str(epochs)
+                strTemp = strTemp + " Epoch: " + str(epoch+1) + "/" + str(epochs)
             if isfinite(tol):
                 strTemp = strTemp + ", " + performFcn.upper() + ": " + str(perf) + "/" + str(tol)
             if isfinite(minGrad):
@@ -88,26 +87,26 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             # plotperf(tr, tol, this, epoch)
             # =============================
             print(strTemp)
-            if len(stop)>1:
+            if len(stop) > 1:
                 print(" >>>> %s, %s\n" % (this, stop))
 
-        dX = mc * dX - (1 - mc) * lr * gX
+        dX = (mc*dX)-(1-mc)*(lr*gX)
         X2 = X + dX
         desingParam2 = reshapeParam(desingParam, X2)
-        perf2, Y2, E2, PHI2, ALPHA2 = mamcost1flscalcperf(desingParam2, X=transpose(train.X), T=transpose(train.T))
+        perf2, Y2, E2, PHI2, ALPHA2 = mamcost1flscalcperf(desingParam2, train.X.transpose(), train.T.transpose())
         if (perf2 / perf) > maxPerfInc:
             lr *= lrDec
             dX = lr * gX
         else:
             if perf2 < perf:
-                lr = lr * lrinc
+                lr *= lrinc
             X = X2
             desingParam = desingParam2
             perf = perf2
-            gX, normgX = mamcost1flscalcgrad(desingParam2, transpose(train.X), transpose(train.T), Y2, E2, PHI2)
+            gX, normgX = mamcost1flscalcgrad(desingParam2, train.X.transpose(), train.T.transpose(), Y2, E2, PHI2)
 
-        if doVal:
-            vperf, _a, _b, _c, _d = mamcost1flscalcperf(desingParam, transpose(valV.X), transpose(valV.T))
+        if doVal is True:
+            vperf, _a, _b, _c, _d = mamcost1flscalcperf(desingParam, valV.X.transpose(), valV.T.transpose())
             if vperf < vv.perf:
                 vv.perf = vperf
                 vv.designParam = desingParam

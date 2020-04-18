@@ -28,3 +28,15 @@ Logica difuza utilizando numpy:
     + [vectorizeMatrixTocolVec](src/matrix/vectorizeMatrixTocolVec.py)
 * other
     + [plotperf](src/other/plotperf.py)
+
+
+#### Ejemplos de uso:
+Se utilizaran [archivo de datos](assets) proporcionados en Matlab.
+
+Prueba sin datos de entrenamiento y testeo:
+![](assets/Capturas/Capturadepantalla45.png)
+
+Prueba sin datos de entrenamiento
+![](assets/Capturas/Capturadepantalla46.png)
+
+![](assets/Capturas/Capturadepantalla47.png)
