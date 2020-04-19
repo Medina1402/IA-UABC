@@ -7,8 +7,7 @@ from src.other import loadMatlabFile
 
 
 def ejemplo1():
-    engineInputs, engineTargets, testV, trainV, valV = loadMatlabFile("assets/engine_data.mat", "engineInputs",
-                                                                      "engineTargets", "testV", "trainV", "valV")
+    testV, trainV, valV = loadMatlabFile("assets/engine_data.mat", "testV", "trainV", "valV")
     trainV = Tuple(array(trainV[0][0][2]), array(trainV[0][0][3]), array(trainV[0][0][4]))
     CENTER, THETA, SIGMA = loadMatlabFile("assets/initdesignparam.mat", "CENTER", "CENTROID", "SIGMA")
     dsp = DesignParams(array(SIGMA), array(CENTER), array(THETA))

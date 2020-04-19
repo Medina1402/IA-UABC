@@ -15,9 +15,9 @@ def ejemplo2():
         "valV"
 
     )
-    testV = Tuple(array(testV[0][0][2]), array(testV[0][0][3]), array(testV[0][0][4][0]))
-    trainV = Tuple(array(trainV[0][0][2]), array(trainV[0][0][3]), array(trainV[0][0][4][0]))
-    valV = Tuple(array(valV[0][0][2]), array(valV[0][0][3]), array(valV[0][0][4][0]))
+    testV = Tuple(array(testV[0][0][2]), array(testV[0][0][3]), array(testV[0][0][4]))
+    trainV = Tuple(array(trainV[0][0][2]), array(trainV[0][0][3]), array(trainV[0][0][4]))
+    valV = Tuple(array(valV[0][0][2]), array(valV[0][0][3]), array(valV[0][0][4]))
     engineInputs = array(engineInputs)
     engineTargets = array(engineTargets)
     SIGMA, CENTER, THETA = loadMatlabFile("assets/initdesignparam.mat", "SIGMA", "CENTER", "CENTROID")
