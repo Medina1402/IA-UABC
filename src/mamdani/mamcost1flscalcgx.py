@@ -49,4 +49,4 @@ def mamcost1flscalcgx(designParam: DesignParams, X: ndarray, T: ndarray, Y: ndar
     gX: ndarray = 2 * dot(Jew.transpose(), ew)
     normgX = normalize(gX)
 
-    return gX, normgX, Jew, ew
+    return gX, normgX, Jew

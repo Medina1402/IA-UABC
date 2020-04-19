@@ -1,6 +1,8 @@
 from numpy import array
+
 from src.mamdani import mamcost1flscalcperf, mamcost1flscalcgx, mamcost1flscalcgrad
 from src.mamdani.typedata import Tuple, DesignParams
+from src.other.plotperf import plotperf
 from src.other import loadMatlabFile
 
 
@@ -21,8 +23,11 @@ def ejemplo1():
     RMSE = MSE ** .5
     print("RMSE: ", RMSE)  # RMSE:  95.19182375747216
     # ===============================================
-    gX, normgX, Jew, ew = mamcost1flscalcgx(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
+    gX, normgX, Jew = mamcost1flscalcgx(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
     print("normgX", normgX)  # normgX 72953.08320644706
     # ===============================================
     gX, normgradX = mamcost1flscalcgrad(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
     print("normgradX: ", normgradX)  # normgradX:  72953.08320644703
+
+    plotperf(gX)
+

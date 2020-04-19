@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
+from numpy import *
 
-from src.mamdani.typedata import TR
 
+def plotperf(data: ndarray):
+    x = arange(0, size(data), 1)
+    coef = polyfit(x, data, 1)
+    poly = poly1d(coef)
 
-def plotperf(tr: TR, goal: int = 0, title="", epoch: int = 0):
-    fig, ax = plt.subplots()
+    plt.plot(x, data, x, poly(x), '--k')
     plt.show()

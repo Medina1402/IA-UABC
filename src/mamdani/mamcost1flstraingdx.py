@@ -1,4 +1,4 @@
-from numpy import transpose, append, remainder, isfinite, ndarray
+from numpy import transpose, append, remainder, isfinite, ndarray, add
 
 from src.mamdani.mamcost1flscalcgrad import mamcost1flscalcgrad
 from src.mamdani.mamcost1flscalcperf import mamcost1flscalcperf
@@ -7,10 +7,11 @@ from src.mamdani.typedata import Tuple, TrainParams, TR, VV, DesignParams
 from src.mamdani.vectorizeParam import vectorizeParam
 
 
-def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = False, testV: Tuple = False,
-                        trainsParam: TrainParams = TrainParams()) -> (DesignParams, TR):
+def mamcost1flstraingdx(designParam: DesignParams, train: Tuple, valV: Tuple = False, testV: Tuple = False,
+                        trainsParam: TrainParams = False) -> (DesignParams, TR):
     """
-    :param desingParam:
+    :param trainsParam: TrainParams
+    :param designParam:
     :param train:
     :param valV:
     :param testV:
@@ -20,6 +21,9 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
 
     this = "MAMCOST1FLSTRAINGDX"
     performFcn = "SSE"
+
+    if trainsParam is False:
+        trainsParam = TrainParams()
 
     epochs = trainsParam.epochs
     tol = trainsParam.goal  # GOAL
@@ -39,28 +43,28 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
     if doTest is not False:
         doTest = True
 
-    X: ndarray = vectorizeParam(desingParam)
-    perf, Y, E, PHI, ALPHA = mamcost1flscalcperf(desingParam, train.X.transpose(), train.T.transpose())
-    gX, normgX = mamcost1flscalcgrad(desingParam, train.X.transpose(), train.T.transpose(), Y, E, PHI)
-    dX: ndarray = -1 * lr * gX
+    X: ndarray = vectorizeParam(designParam)
+    perf, Y, E, PHI, ALPHA = mamcost1flscalcperf(designParam, train.X.transpose(), train.T.transpose())
+    gX, normgX = mamcost1flscalcgrad(designParam, train.X.transpose(), train.T.transpose(), Y, E, PHI)
+    dX: ndarray = -lr * gX
 
     vv = VV()
+    tr = TR()
     if doVal:
-        vv.designParam = desingParam
-        vperfX, __a, __b, __c, __d = mamcost1flscalcperf(desingParam, valV.X.transpose(), valV.T.transpose())
+        vv.designParam = designParam
+        vperfX, _, _, _, _ = mamcost1flscalcperf(designParam, valV.X.transpose(), valV.T.transpose())
         vv.perf = vperfX
         vv.numfail = 0
 
-    tr = TR()
-    for epoch in range(epochs):
+    for epoch in range(epochs+1):
         tr.epoch = append(tr.epoch, epoch)
         tr.perf = append(tr.perf, perf)
         tr.lr = append(tr.lr, lr)
 
-        if doVal is True:
+        if doVal:
             tr.vperf = append(tr.vperf, vv.perf)
-        if doTest is True:
-            temp, _Y, _E, _PHI, _ALPHA = mamcost1flscalcperf(desingParam, testV.X.transpose(), testV.T.transpose())
+        if doTest:
+            temp, _, _, _, _ = mamcost1flscalcperf(designParam, testV.X.transpose(), testV.T.transpose())
             tr.tperf = append(tr.tperf, temp)
 
         stop = ""
@@ -70,15 +74,15 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             stop = "Maximum epoch reached, performance goal was not met."
         elif normgX < minGrad:
             stop = "Minimum gradient reached, performance goal was not met."
-        elif doVal and (vv.numfail > maxFail):
+        elif (doVal is True) and (vv.numfail > maxFail):
             stop = "Validation stop."
-            desingParam = vv.designParam
+            designParam = vv.designParam
 
         # Progreso
-        if not remainder(epochs, show) or len(stop) > 0:
+        if ((epochs >= epoch) and (epoch % show == 0)) or len(stop):
             strTemp = this + " >>"
             if isfinite(epochs):
-                strTemp = strTemp + " Epoch: " + str(epoch+1) + "/" + str(epochs)
+                strTemp = strTemp + " Epoch: " + str(epoch) + "/" + str(epochs)
             if isfinite(tol):
                 strTemp = strTemp + ", " + performFcn.upper() + ": " + str(perf) + "/" + str(tol)
             if isfinite(minGrad):
@@ -87,30 +91,31 @@ def mamcost1flstraingdx(desingParam: DesignParams, train: Tuple, valV: Tuple = F
             # plotperf(tr, tol, this, epoch)
             # =============================
             print(strTemp)
-            if len(stop) > 1:
+            if len(stop):
                 print(" >>>> %s, %s\n" % (this, stop))
+                break
 
-        dX = (mc*dX)-(1-mc)*(lr*gX)
+        dX = mc * dX - (1 - mc) * lr * gX
         X2 = X + dX
-        desingParam2 = reshapeParam(desingParam, X2)
-        perf2, Y2, E2, PHI2, ALPHA2 = mamcost1flscalcperf(desingParam2, train.X.transpose(), train.T.transpose())
-        if (perf2 / perf) > maxPerfInc:
+        designParam2 = reshapeParam(designParam, X2)
+        perf2, Y2, E2, PHI2, _ = mamcost1flscalcperf(designParam2, train.X.transpose(), train.T.transpose())
+        if (perf2/perf) > maxPerfInc:
             lr *= lrDec
             dX = lr * gX
         else:
             if perf2 < perf:
                 lr *= lrinc
-            X = X2
-            desingParam = desingParam2
-            perf = perf2
-            gX, normgX = mamcost1flscalcgrad(desingParam2, train.X.transpose(), train.T.transpose(), Y2, E2, PHI2)
+        X = X2
+        designParam = designParam2
+        perf = perf2
+        gX, normgX = mamcost1flscalcgrad(designParam2, train.X.transpose(), train.T.transpose(), Y2, E2, PHI2)
 
-        if doVal is True:
-            vperf, _a, _b, _c, _d = mamcost1flscalcperf(desingParam, valV.X.transpose(), valV.T.transpose())
-            if vperf < vv.perf:
-                vv.perf = vperf
-                vv.designParam = desingParam
-                vv.numfail = 0
-            elif vperf > vv.perf:
-                vv.numfail += 1
-    return desingParam, tr
+    if doVal:
+        vperf, _, _, _, _ = mamcost1flscalcperf(designParam, valV.X.transpose(), valV.T.transpose())
+        if vperf < vv.perf:
+            vv.perf = vperf
+            vv.designParam = designParam
+            vv.numfail = 0
+        elif vperf > vv.perf:
+            vv.numfail += 1
+    return designParam, tr

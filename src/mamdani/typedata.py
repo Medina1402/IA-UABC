@@ -17,8 +17,10 @@ class Tuple:
 
 class VV:
     designParam: DesignParams
-    perf: float
-    numfail: float
+
+    def __init__(self):
+        self.perf: float = 0
+        self.numfail: float = 0
 
 
 class TR:
