@@ -2,7 +2,7 @@ from numpy import array
 
 from src.mamdani import mamcost1flscalcperf, mamcost1flscalcgx, mamcost1flscalcgrad
 from src.mamdani.typedata import Tuple, DesignParams
-from src.other.plotperf import plotperf
+from src.other.plotperf import plotregression
 from src.other import loadMatlabFile
 
 
@@ -29,5 +29,5 @@ def ejemplo1():
     gX, normgradX = mamcost1flscalcgrad(dsp, trainV.X.transpose(), trainV.T.transpose(), Y, E, PHI)
     print("normgradX: ", normgradX)  # normgradX:  72953.08320644703
 
-    plotperf(gX)
+    plotregression(trainV.T, Y.transpose())
 

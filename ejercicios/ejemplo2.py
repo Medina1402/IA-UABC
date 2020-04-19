@@ -2,6 +2,7 @@ from numpy import array
 from src.mamdani.typedata import DesignParams, Tuple, TrainParams
 from src.mamdani import mamcost1flstraingdx, mamcost1flscalcperf
 from src.other import loadMatlabFile
+from src.other.plotperf import plotregression
 
 
 def ejemplo2():
@@ -42,3 +43,4 @@ def ejemplo2():
     )
 
     SEE, Y, _, _, _ = mamcost1flscalcperf(designParam, engineInputs.transpose(), engineTargets.transpose())
+    plotregression(engineTargets, Y.transpose())

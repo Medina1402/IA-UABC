@@ -33,10 +33,10 @@ Logica difuza utilizando numpy:
 #### Ejemplos de uso:
 Se utilizaran [archivo de datos](assets) proporcionados en Matlab.
 
-Prueba sin datos de entrenamiento y testeo:
-![](assets/Capturas/Capturadepantalla45.png)
-
-Prueba sin datos de entrenamiento
-![](assets/Capturas/Capturadepantalla46.png)
-
+Prueba sin datos de entrenamiento y testeo: [Ejercicio 1](ejercicios/ejemplo1.py)
 ![](assets/Capturas/Capturadepantalla47.png)
+![](ejercicios/ejemplo1.png)
+
+Prueba con datos de entrenamiento: [Ejercicio 2](ejercicios/ejemplo2.py)
+![](assets/Capturas/Capturadepantalla48.png)
+![](ejercicios/ejemplo2.png)

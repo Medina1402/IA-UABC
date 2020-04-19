@@ -1,4 +1,4 @@
-from ejercicios.base import ejemplo2
+from ejercicios.ejemplo2 import ejemplo2
 from ejercicios.ejemplo1 import ejemplo1
 
 if __name__ == '__main__':
